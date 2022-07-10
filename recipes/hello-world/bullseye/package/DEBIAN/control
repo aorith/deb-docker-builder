@@ -1,0 +1,7 @@
+Package: hello-world
+Version: 0.1~bullseye
+Architecture: amd64
+Maintainer: Manuel Sanchez <aomanu@gmail.com>
+Depends: curl, wget
+Homepage:
+Description: Example
