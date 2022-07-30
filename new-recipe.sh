@@ -26,4 +26,7 @@ Homepage:
 Description: Example
 EOF
 
-vim "${recipe_dir}/package/DEBIAN/control"
+printf '\nThe skeleton for the package "%s" for "%s" has been generated.\n\n' "$pkg_name" "$deb_tag"
+printf 'Go ahead and modify as required the control file located at "%s"\nThen, create the required scripts and files to build the package under "%s"\n' \
+    "${recipe_dir}/package/DEBIAN/control" "${recipe_dir}/build"
+printf 'When everything is set-up, run ./build.sh\n'
