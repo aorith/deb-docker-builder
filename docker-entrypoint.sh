@@ -16,11 +16,8 @@ cp -var /recipe-ro/* /recipe/
 control_file="/recipe/package/DEBIAN/control"
 [[ -f "$control_file" ]] \
     || Err "Debian control file not found on 'package/DEBIAN/control'."
-find "/recipe/build/scripts" -mindepth 1 -maxdepth 1 -type f -executable -name "*.sh" | grep -qz . >/dev/null 2>&1 \
+find "/recipe/build/scripts" -mindepth 1 -maxdepth 1 -type f -executable | grep -qz . >/dev/null 2>&1 \
     || Err "No scripts found on 'build/scripts'."
-
-# Package name
-package_name="$(grep -E '^Package:' < "$control_file" | head -1 | awk '{print $2}')_$(grep -E 'Version:' < "$control_file" | head -1 | awk '{print $2}').deb" 
 
 # Run the scripts that actually create the package
 echo
@@ -29,6 +26,9 @@ find /recipe/build/scripts/ -type f -executable -print0 | while IFS= read -r -d 
     echo "Running '$script' ..."
     "$script" || Err "Script '$script' failed."
 done
+
+# Package name
+package_name="$(grep -E '^Package:' < "$control_file" | head -1 | awk '{print $2}')_$(grep -E 'Version:' < "$control_file" | head -1 | awk '{print $2}').deb" 
 
 # Build the package
 echo

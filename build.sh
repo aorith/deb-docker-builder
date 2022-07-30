@@ -19,7 +19,7 @@ while [[ $# -gt 0 ]]; do
         --src-dir)
             shift
             [[ -d "$(realpath "$1")" ]] || Err "Invalid directory: '$1'."
-            SRC_DIR=$(realpath "$1")
+            SRC_DIR="$1"
             shift
             ;;
         *)
@@ -33,21 +33,22 @@ if [[ -z "$SRC_DIR" ]]; then
     available_builds=()
     while IFS='/' read -r _base _package _debian_tag; do
         available_builds+=( "${_debian_tag}|${_package}" )
-    done < <(find "recipes" -maxdepth 2 -mindepth 2 -type d)
+    done < <(find "recipes" -maxdepth 2 -mindepth 2 \( -type d -o -type l \))
     echo "Available packages in 'recipes':"
     {
-        for _ab in "${available_builds[@]}"; do
-            echo "$_ab"
+        for _index in "${!available_builds[@]}"; do
+            echo "$(( _index + 1)).|${available_builds[$_index]}"
         done
-    } | sort | column -t -s'|' | nl --starting-line-number=1 -w2 -s'.    '
+    } | sort | column -t -s'|'
     echo
     read -r -p 'Package # to build: ' ans_n
     [[ "$ans_n" =~ ^[0-9]+$ ]] || Err 'Invalid option (must be numeric).'
     (( ans_n  > 0 )) || Err 'Invalid option.'
     (( ans_n  <= ${#available_builds[@]} )) || Err 'Invalid option.'
 
-    package_to_build=$(awk -F '|' '{print $2}' <<< "${available_builds[$(( ans -1))]}")
-    debian_tag=$(awk -F '|' '{print $1}' <<< "${available_builds[$(( ans -1))]}")
+    index=$(( ans_n - 1 ))
+    package_to_build=$(awk -F '|' '{print $2}' <<< "${available_builds[${index}]}")
+    debian_tag=$(awk -F '|' '{print $1}' <<< "${available_builds[${index}]}")
     package_path="recipes/${package_to_build}/${debian_tag}"
 else 
     debian_tag=$(basename -- "$SRC_DIR")
@@ -61,6 +62,11 @@ docker ps >/dev/null 2>&1 || Err 'Cannot run docker.'
 # Build the image
 full_image_tag="localhost/deb-docker-builder/debian:${debian_tag}"
 dockerfile="Dockerfile"
+
+echo "-------------------------------"
+echo " Package name: $package_to_build"
+echo " Debian tag:   $debian_tag"
+echo "-------------------------------"
 
 echo "Running: docker build --tag $full_image_tag --file $dockerfile ."
 docker build --build-arg BASE_IMAGE="debian:${debian_tag}" --tag "$full_image_tag" --file "$dockerfile" . \
