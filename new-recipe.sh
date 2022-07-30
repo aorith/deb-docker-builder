@@ -14,7 +14,7 @@ if [[ -e "${RECIPES_DIR}/${pkg_name}" ]]; then
 fi
 
 recipe_dir="${RECIPES_DIR}/${pkg_name}/${deb_tag}"
-mkdir -p "${recipe_dir}/"{package/DEBIAN,build/scripts,post-scripts}
+mkdir -p "${recipe_dir}/"{package/DEBIAN,build/scripts,build/post-scripts}
 
 cat <<EOF > "${recipe_dir}/package/DEBIAN/control"
 Package: ${pkg_name}
