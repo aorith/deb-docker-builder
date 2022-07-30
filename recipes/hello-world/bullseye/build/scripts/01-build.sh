@@ -6,10 +6,5 @@ set -eo pipefail
 
 # Create the directory tree for the resulting debian package
 mkdir -p /recipe/package/usr/local/bin
-# Install dependencies
-apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y figlet
 # Build the program
 gcc /recipe/build/hello-world.c -o /recipe/package/usr/local/bin/hello-world
-# Test the program...
-/recipe/package/usr/local/bin/hello-world
-

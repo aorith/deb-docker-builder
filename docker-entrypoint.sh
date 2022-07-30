@@ -25,7 +25,7 @@ package_name="$(grep -E '^Package:' < "$control_file" | head -1 | awk '{print $2
 # Run the scripts that actually create the package
 echo
 echo "Running build scripts..."
-for script in /recipe/build/scripts/*.sh; do
+find /recipe/build/scripts/ -type f -executable -print0 | while IFS= read -r -d '' script; do
     echo "Running '$script' ..."
     "$script" || Err "Script '$script' failed."
 done
@@ -35,5 +35,15 @@ echo
 echo "Building the package..."
 cd "/recipe/package"
 dpkg-deb --build . "$package_name"
+
+# Run post-scripts
+echo "Running post-scripts..."
+find /recipe/build/post-scripts/ -type f -executable -print0 | while IFS= read -r -d '' script; do
+    echo "Running '$script' ..."
+    "$script" || Err "Script '$script' failed."
+done
+
 # Move it to the output folder
-cp -var ./*.deb /output/
+echo
+echo "All done, saving the Debian package outside of the container."
+cp -var /recipe/package/*.deb /output/

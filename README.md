@@ -8,8 +8,8 @@ When building a package the contents of `recipes/<package_name>/<tag>` will be a
 - `/recipe-ro` a read-only bind mount  
 - `/recipe` a copy of the contents, *scripts* should do its work here  
 
-All the bash *scripts* found at `/recipe/build/scripts` (which would be `recipes/<package_name>/<tag>/build/scripts` outside of the container) will be executed in order.   
-When those *scripts* finish the contents of `/recipe/package` will be built into a .deb file and saved to the `output/` directory outside of the container.  
+All the *scripts* or binaries with execution permissions found at `/recipe/build/scripts` (which would be `recipes/<package_name>/<tag>/build/scripts` outside of the container) will be executed in order.   
+When those *scripts* finish the contents of `/recipe/package` will be built into a `.deb` file and saved to the `output/` directory outside of the container.  
 
 The `DEBIAN/control` file should include:  
 
