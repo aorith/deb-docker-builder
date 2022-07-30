@@ -2,7 +2,7 @@
 set -e
 
 echo "=========================================="
-echo "        RUNNING /entrypoint.sh"
+echo "        RUNNING /docker-entrypoint.sh"
 echo "=========================================="
 
 Err() { printf "ERROR: %s\n" "$*" 1>&2; exit 1; }
