@@ -32,14 +32,14 @@ done
 if [[ -z "$SRC_DIR" ]]; then
     available_builds=()
     while IFS='/' read -r _base _package _debian_tag; do
-        available_builds+=( "${_debian_tag}|${_package}" )
+        available_builds+=( "${_package}|${_debian_tag}" )
     done < <(find "recipes" -maxdepth 2 -mindepth 2 \( -type d -o -type l \))
     echo "Available packages in 'recipes':"
     {
         for _index in "${!available_builds[@]}"; do
             echo "$(( _index + 1)).|${available_builds[$_index]}"
         done
-    } | sort | column -t -s'|'
+    } | column -t -s'|'
     echo
     read -r -p 'Package # to build: ' ans_n
     [[ "$ans_n" =~ ^[0-9]+$ ]] || Err 'Invalid option (must be numeric).'
@@ -47,8 +47,8 @@ if [[ -z "$SRC_DIR" ]]; then
     (( ans_n  <= ${#available_builds[@]} )) || Err 'Invalid option.'
 
     index=$(( ans_n - 1 ))
-    package_to_build=$(awk -F '|' '{print $2}' <<< "${available_builds[${index}]}")
-    debian_tag=$(awk -F '|' '{print $1}' <<< "${available_builds[${index}]}")
+    package_to_build=$(awk -F '|' '{print $1}' <<< "${available_builds[${index}]}")
+    debian_tag=$(awk -F '|' '{print $2}' <<< "${available_builds[${index}]}")
     package_path="recipes/${package_to_build}/${debian_tag}"
 else 
     debian_tag=$(basename -- "$SRC_DIR")
