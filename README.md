@@ -19,6 +19,8 @@ Version: <package_version>
 Architecture: <arch>
 Maintainer: <name/email>
 Depends: <dependencies> (optional but recommended)
+Section: <section>
+Priority: optional
 Description: <description>
 ```
 

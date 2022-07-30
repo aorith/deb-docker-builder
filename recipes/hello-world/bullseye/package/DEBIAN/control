@@ -3,5 +3,7 @@ Version: 0.1~bullseye
 Architecture: amd64
 Maintainer: Manuel Sanchez <aomanu@gmail.com>
 Depends: figlet
+Section: custom
+Priority: optional
 Homepage:
 Description: Example

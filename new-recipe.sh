@@ -22,6 +22,8 @@ Version: 0.1~${deb_tag}
 Architecture: amd64
 Maintainer: Manuel Sanchez <aomanu@gmail.com>
 Depends: curl, wget
+Section: custom
+Priority: optional
 Homepage:
 Description: Example
 EOF
